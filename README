@@ -1,0 +1,66 @@
+::::::::::: SEMC - Semonto :::::::::::
+
+:: What is SemC
+
+SemC is a small web application which allows Semonto to access internal variables, perform internal tests like checking the database, memory-usage, disk-usage,…
+
+Semonto uses the default HTTP (or HTTPS) GET protocol to obtain this information.
+Your server has to run a webserver like Apache2.
+
+At the moment, this webapp is available in PHP (4 and 5 supported), but we plan to add more implementations as soon as possible. Please feel free to implement the webapp in another language or contact us at info@semonto.com.
+
+:: Installation
+
+Copy the webapp to your server (via FTP/SFTP/...) and put the code in separate folder. A folder that is used only for this webapp. Be sure to use the implementation that can be processed by your server (eg PHP). Test this webapp by visiting this folder, eg if your folder is called semc, http://yourserver.tld/semc should work and you will need to see '-1' as result.
+
+Please read the README file in the implementation folder for more information about how to install the webapp.
+
+:: Security
+
+If wanted, you can protect the semc folder on your server by disallowing all traffic, except the servers of Semonto. Be sure your server allows .htaccess files to overwrite the current settings. If this is the case, add a .htaccess file in the semc folder with following contents:
+
+Order Deny,Allow
+Deny from all
+Allow from ip_testcenter1.
+Allow from ip_testcenter2.
+Allow from ip_testcenter3.
+Allow from ip_testcentersupport.
+Allow from ip_testcentersupport1.
+
+You can find a list of the IP-addresses at configpanel.semonto.com/help once you are logged in.
+
+
+:: Custom tests and working
+
+It is quite easy to add custom tests.
+Semonto will perform tests on your server periodically by calling your SemC webapp over HTTP(S) with GET parameters, as example http://yourserver.tld/semc/?test=version
+
+The result expected by Semonto is as follows:
+
+	STATUS::INFO::DETAILS
+
+With STATUS as a number between -1 and 5 with
+    < = 0: unknown error
+	0: All OK
+	1: Warning
+	2: Critic
+    > = 3: Error
+
+With ::INFO:: as separation sign
+
+And with DETAILS as more information about the state, failure.
+If the first word of the DETAILS is a number, this number will be used in the Semonto graphs.
+For example, the test of `current-server-load` can give  3.43 as load, and status OK
+
+0::INFO::3.43
+
+or an error when the load is too high
+
+3::INFO::34.12
+
+We can also use text as details. The details will be emailed/showed in the error messages of Semonto and in the logbook. If you want to use the graphs, history-center etc, be sure to have the first word of the details as a number.
+For example: a test for the memory usage can result in
+
+0::INFO::60 % in use, 233MB free memory
+
+You can implement as many tests if you want. The only condition is that the result should be always like the results above.
