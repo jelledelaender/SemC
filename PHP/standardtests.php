@@ -38,10 +38,11 @@
 			$o = 1;// simple lus
 			for ($i = 0; $i < 5000; $i++) $o += $i; 
 
+			$totaltime = getRunningTime();
 			$status = 0;
 			if ($totaltime > 0.5) $status = 1;
 			if ($totaltime > 1.0) $status = 2;
-			throwStatus($status, getRunningTime());
+			throwStatus($status, $totaltime);
 		}
 
 		
