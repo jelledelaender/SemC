@@ -66,28 +66,28 @@
 		// MySQL Database
 		if ($test == "mysql-ping") {
 			set_time_limit(0);
-			$conn = mysql_connect($host, $dbuser, $dbpass); // Make a connection
-			if (!mysql_ping($conn)) throwStatus("4","Failed to ping, connect or login on the db-server");
+			$conn = mysqli_connect($host, $dbuser, $dbpass); // Make a connection
+			if (!mysqli_ping($conn)) throwStatus("4","Failed to ping, connect or login on the db-server");
 			else throwStatus("0", getRunningTime()); // OK
 		}
 
 		if ($test == "mysql-select") {
 			set_time_limit(0);
-			$conn =mysql_connect($host, $dbuser, $dbpass); // Make a connection
+			$conn =mysqli_connect($host, $dbuser, $dbpass); // Make a connection
 			if (!$conn) throwStatus("4","Failed to connect or login on the db-server");
-			$db   = mysql_select_db($database); // Select the database
+			$db   = mysqli_select_db($conn, $database); // Select the database
 			if (!$db) throwStatus("4","Failed to select the database");
 			else throwStatus("0", getRunningTime()); // OK
 		}
 
 		if ($test == "mysql-execTable") {
 			set_time_limit(0);
-			$conn =mysql_connect($host, $dbuser, $dbpass); // Make a connection
+			$conn =mysqli_connect($host, $dbuser, $dbpass); // Make a connection
 			if (!$conn) throwStatus("4","Failed to connect or login on the db-server");
-			$db   = mysql_select_db($database); // Select the database
+			$db   = mysqli_select_db($conn, $database); // Select the database
 			if (!$db) throwStatus("4", "Failed to select the database");
 			$sql  = "SELECT * FROM $dbtable LIMIT 50"; // Try to fetch some data
-			$res = mysql_query($sql) or die("4"); // Try to read this data
+			$res = mysqli_query($conn, $sql) or die("4"); // Try to read this data
 			if (!$res) throwStatus("4", getRunningTime()); // Oops
 			else throwStatus("0", getRunningTime()); // OK
 		}
